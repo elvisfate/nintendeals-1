@@ -10,6 +10,7 @@ from commons.keys import FLAG
 from commons.keys import NAME
 from commons.keys import REGION
 from commons.keys import US, CH, NZ
+from commons.settings import WEBSITE_URL
 
 
 def make_row(game, countries_with_sale, avg_discount):
@@ -28,18 +29,19 @@ def make_row(game, countries_with_sale, avg_discount):
     if len(title) > 35:
         title = f'{title[:34]}…'.replace(' …', '…')
 
-    return f'{title}|{countries}|`{int(avg_discount)}`|{game.scores.metascore}|{game.scores.userscore}|{game.wishlisted}'
+    return f'{title}|{countries}|`{int(avg_discount)}%`'
+    # |{game.scores.metascore}|{game.scores.userscore}|{game.wishlisted}'
 
 
 def make_table(games, prices, system):
     games = sorted(games.values(), key=lambda x: x.wishlisted, reverse=True)
 
     content = [
-        f'Title | Countries/Regions | % | MS | US | {STAR} ',
-        '--- | --- | :---: | :---: | :---: | :---:'
+        f'Title | Regions | % ',  # | MS | US | {STAR} ',
+        '--- | --- | :---: ',  # | :---: | :---: | :---:'
     ]
 
-    for game in games[:50]:
+    for game in sorted(games[:50], key=lambda g: g.title.lower()):
         if game.system != system:
             continue
 
@@ -91,22 +93,11 @@ def generate(games, prices, submissions, system):
     table = make_table(games, prices, system)
 
     content = []
-
     content.extend(header())
 
-    content.append('> 💸 👉 PRICES AND SCORES IN THE LINKS AT THE BOTTOM 👈 💸')
     content.append('')
-
-    if table:
-        content.append('###Most wanted games on sale')
-        content.append('')
-        content.append(table)
-        content.append(SEPARATOR)
-
-    content.append('###For prices and more check your country/region post')
-    content.append(f'> *{WARNING} There\'s a known bug on reddit mobile where links won\'t open correctly*')
+    content.append('⬇ Regional posts with prices, dates, scores, and more.')
     content.append('')
-
     content.append('-|new sales this week|total sales')
     content.append('---|:---:|:---:')
 
@@ -121,6 +112,14 @@ def generate(games, prices, submissions, system):
         content.append(
             f'[{details[FLAG]} {details[NAME]}]({submission.url})|{submission.new_sales}|{submission.total_sales}'
         )
+
+    content.append('')
+
+    if table:
+        content.append(f'###Most [wishlisted]({WEBSITE_URL}) games on sale')
+        content.append('')
+        content.append(table)
+        content.append(SEPARATOR)
 
     content.extend(footer())
 

@@ -31,7 +31,7 @@ def make_row(game, country, price, sale, disable_url=False, **kwargs):
         title = f'{NINTENDO} {title}'
 
     if game.hidden_gem:
-        title = f'{title} {GEM}'
+        title = f'{GEM} {title}'
 
     if len(title) > 25:
         title = f'{title[:26]}…'.replace(' …', '…')

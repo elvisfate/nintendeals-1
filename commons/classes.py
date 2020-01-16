@@ -67,7 +67,7 @@ class Game:
             self._title = f' {NINTENDO} {self._title}'
 
         if self.hidden_gem:
-            self._title = f'{self._title} {GEM}'
+            self._title = f' {GEM} {self._title}'
 
         return self._title
 
